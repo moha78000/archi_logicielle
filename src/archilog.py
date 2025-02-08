@@ -113,9 +113,30 @@ def export_csv(csv_file):
 
 
 @cli.command()
-@click.option("-id" , )
+@click.option("-id" , "id" , prompt="Saisissez l'id de l'élément à supprimer", help="The id of the item.")
+
+def delete(id):
+    db = sqlite3.connect("test.db")
+    cursor = db.cursor()
+    cursor.execute("DELETE FROM budget WHERE id = ?", (id,))
+    db.commit()
+    db.close()
+    click.echo("Suppression réussie !")
 
 
+@cli.command()
+@click.option("-i ", "--id", prompt="Saisissez l'id de l'élément à mettre à jour", help="The id of the item.")
+@click.option("-n", "--name", prompt="Saisissez le nom ", help="The name of the item.")
+@click.option("-c", "--category", prompt="Saisissez la catégorie ", help="The name of the category.") 
+@click.option("-p", "--price", prompt="Price", help="Saisissez le montant")
+
+def update(id, name, category, price):
+    db = sqlite3.connect("test.db")
+    cursor = db.cursor()
+    cursor.execute("UPDATE budget SET name = ?, category = ?, price = ? WHERE id = ?", (name, category, price, id))
+    db.commit()
+    db.close()
+    click.echo("Mise à jour réussie !")
 
 if __name__ == "__main__":
     cli()    
